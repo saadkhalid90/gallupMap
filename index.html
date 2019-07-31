@@ -1,0 +1,35 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Gallup Int. Polls</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+  <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+  <script src="//d3js.org/topojson.v1.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+  <style>
+  body {
+    background-image: radial-gradient(circle, #bdbdbd, #aaaaaa, #989898, #868686, #757575);
+    font-family: 'Roboto', sans-serif;
+  }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <select class = 'year selector'>
+      <option value="2016">2016</option>
+      <option value="2013">2013</option>
+      <option value="2011">2011</option>
+    </select>
+    <select class = 'question selector'>
+      <option value="OptimismScore">General Optimism</option>
+      <option value="EconScore">Economic Optimism</option>
+      <option value="HappinessScore">Happiness</option>
+    </select>
+  </div>
+  <svg class ="GallupPollInd" width = 1200 height = 700 ></svg>
+  <script src="index.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
