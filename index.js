@@ -122,7 +122,7 @@ function addEventListeners(selection){
       d3.select(this)
           .raise()
         .transition()
-          .style('opacity', '1');
+          .style('fill-opacity', '1');
 
       let node = this;
 
