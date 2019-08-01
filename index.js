@@ -62,8 +62,8 @@ function draw(selection, data, params){
     .attr('d', path)
     .call(setFill, color_threshold, params.year, params.groupType, params.varType)
     .style('stroke', '#212121')
-    //.style('opacity', 0.9)
-    .style('stroke-width', '1.5px')
+    .style('opacity', 0.7)
+    .style('stroke-width', '1px')
     .style('pointer-events', 'visible');
 
   let legendGroup = selection.append('g')
@@ -83,6 +83,7 @@ function draw(selection, data, params){
               return `translate(${i*25}, 0)`
             })
             .style('fill', d => color_threshold(d))
+            .style('opacity', 0.7);
             // .style('stroke', 'black')
             // .style('stroke-width', '0.5px');
 
@@ -98,6 +99,23 @@ function draw(selection, data, params){
 }
 
 function addEventListeners(selection){
+
+  let tooltip = Tooltip({
+    idPrefix : 'w-tooltip',
+    dataId : 'index',
+    templateSelector : '#w-tooltip',
+    selectorDataMap : {
+      '.s-p__tooltip-header h1' : function(d){
+        return d.properties.ADMIN;
+      },
+      '.s-p__tooltip-header img' : function(d){
+        return `./flags/${d.properties.ADMIN.toLowerCase().replace(/ /g,'-')}.svg`;
+      },
+      '.s-p__tooltip-body p' : function(d) {
+        return document.getElementById('param').selectedOptions[0].innerText + ' : very high';
+      }
+    }
+  });
   selection
     .selectAll('.country')
     .on('mouseover', function(d){
@@ -105,9 +123,9 @@ function addEventListeners(selection){
       d3.select(this)
           .raise()
         .transition()
-          .style('stroke', '#fff');
+          .style('opacity', '1');
 
-      /*let node = this;
+      let node = this;
 
       selection
         .selectAll('.country')
@@ -115,20 +133,38 @@ function addEventListeners(selection){
           return this !== node;
         })
         .transition()
-          .style('opacity', 0.60);
+          .style('opacity', 0.4);
         //.style('stroke-width', '2px')
         //.style('stroke', '#fff');*/
+
+        selection
+          .selectAll('.legendContainer rect')
+          .transition()
+            .style('opacity', 1);
     })
     .on('mouseout', function(d){
       console.log(d);
-      d3.select(this)
+      /*d3.select(this)
         .transition()
-          .style('stroke', '#212121');
-      /*selection
+          .style('stroke', '#212121');*/
+      selection
         .selectAll('.country')
         .transition()
-        .style('opacity', '0.9');*/
+        .style('opacity', '0.7');
+
+
+
+      selection
+        .selectAll('.legendContainer rect')
+        .transition()
+          .style('opacity', 0.7);
+
+      tooltip.removeTooltip(d);
+
     })
+    .on('mousemove', function(d){
+      tooltip.createTooltip(d, d3.event);
+    });
 }
 
 function drawUpdate(selection, params){

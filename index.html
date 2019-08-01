@@ -15,22 +15,80 @@
     background-image: radial-gradient(circle, #bdbdbd, #aaaaaa, #989898, #868686, #757575);
     font-family: 'Roboto', sans-serif;
   }
+
+  .s-p__tooltip {
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+    width: 200px;
+    background-color: rgba(69, 90, 100, .8);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    z-index: 100;
+    color: white;
+    /*box-shadow: 8px 13px 21px -10px rgba(177,179,178,0.65);*/
+  }
+
+  .s-p__tooltip-header{
+    background-color: rgba(55, 71, 79, 0.7);
+    margin: -10px;
+    display: flex;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 10px 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .s-p__tooltip-header h1 {
+      font-size: 14px;
+      font-weight: 500;
+      margin: 5px;
+  }
+
+  .s-p__tooltip-header img {
+      width: 25px;
+      margin: 5px;
+  }
+
+  .s-p__tooltip-body p {
+      margin: 5px;
+      font-size: 12px;
+  }
+
+  .sp-data {
+    font-weight: 500;
+  }
   </style>
 </head>
 <body>
   <div class="controls">
-    <select class = 'year selector'>
+    <select class = "year selector">
       <option value="2016">2016</option>
       <option value="2013">2013</option>
       <option value="2011">2011</option>
     </select>
-    <select class = 'question selector'>
+    <select class = "question selector" id="param">
       <option value="OptimismScore">General Optimism</option>
       <option value="EconScore">Economic Optimism</option>
       <option value="HappinessScore">Happiness</option>
     </select>
   </div>
   <svg class="GallupPollInd" width="1200" height="700" ></svg>
+  <template id="w-tooltip">
+    <div class="s-p__tooltip">
+      <div class="s-p__tooltip-header">
+        <h1></h1>
+        <img src=""/>
+      </div>
+      <div class="s-p__tooltip-body">
+        <p></p>
+      </div>
+    </div>
+  </template>
+  <script src="tooltip.js"></script>
   <script src="index.js"></script>
 </body>
 </html>
