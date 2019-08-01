@@ -11,7 +11,7 @@
   <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
   <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
-  
+
   <script src="https://unpkg.com/topojson-client@3"></script>
   <script src="https://unpkg.com/topojson-simplify@3"></script>
 
@@ -40,7 +40,7 @@
       </div>
       <div class="selector">
         <span class="selector_label">Indicator</span>
-        <select id="select_question" class = "question">
+        <select id="param" class = "question">
           <option value="OptimismScore">General Optimism</option>
           <option value="EconScore">Economic Optimism</option>
           <option value="HappinessScore">Happiness</option>
@@ -91,7 +91,7 @@
     $('#select_year').selectize({
       onChange: function(value) {
         let year = value;
-        let question = $('#select_question').val();
+        let question = $('#param').val();
 
         let params = {};
         params.year = year;
@@ -101,7 +101,7 @@
         drawUpdate(d3.selectAll('path'), params);
       }
     });
-    $('#select_question').selectize({
+    $('#param').selectize({
       onChange: function(value) {
         let year = $('#select_year').val();
         let question = value;

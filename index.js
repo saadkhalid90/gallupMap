@@ -6,7 +6,7 @@ params.groupType = 'Overall';
 params.varType = 'OptimismScore';
 
 async function readAndDraw(){
-  let data = await Promise.all([d3.json('worldMap.topojson'),d3.csv('gallupSum.csv')]); 
+  let data = await Promise.all([d3.json('worldMap.topojson'),d3.csv('gallupSum.csv')]);
   topoWorld = topology = topojson.presimplify(data[0]);
   topoWorld = topojson.simplify(topoWorld,0.3)
   gallupPoll = data[1];
@@ -119,7 +119,6 @@ function addEventListeners(selection){
   selection
     .selectAll('.country')
     .on('mouseover', function(d){
-      console.log(d);
       d3.select(this)
           .raise()
         .transition()
@@ -143,7 +142,6 @@ function addEventListeners(selection){
             .style('opacity', 1);
     })
     .on('mouseout', function(d){
-      console.log(d);
       /*d3.select(this)
         .transition()
           .style('stroke', '#212121');*/
