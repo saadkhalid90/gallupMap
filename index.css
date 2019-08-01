@@ -1,0 +1,79 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0px;
+}
+
+.controls {
+  padding: 30px 0px;
+  display: flex;
+  justify-content: space-between;
+  background-image: linear-gradient(to right top, #6a1b9a, #731d9e, #7c1fa2, #8522a6, #8e24aa);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.selectors {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.selector {
+  margin-left: 10px;
+}
+
+.selector_label {
+  color: white;
+  margin-bottom: 12px;
+}
+
+.year {
+  width: 100px;
+  margin-top: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.filter, .question {
+  width: 170px;
+  margin-top: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.logo_container {
+  display: flex;
+  align-items: center;
+}
+
+.gallup_logo {
+  width: 120px;
+}
+
+.content_container {
+  margin: 0px 120px;
+}
+
+.svg_container {
+  background-image: radial-gradient(circle, #ffffff, #fbfbfb, #f6f6f6, #f2f2f2, #eeeeee);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 80px;
+}
+
+.foot_plotree {
+  width: 35px;
+  margin-left: 8px;
+}
+
+.foot_plotree_contain {
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.designed_by {
+  display: flex;
+  background: #8E24AA;
+  justify-content: flex-end;
+  padding: 10px 0px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
