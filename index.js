@@ -2,12 +2,14 @@ let topoWorld, gallupPoll, projection, path, colScale;
 
 let params = {};
 params.year = 2016;
-params.groupType = 'Overall'
-params.varType = 'OptimismScore'
+params.groupType = 'Overall';
+params.varType = 'OptimismScore';
 
 async function readAndDraw(){
-  topoWorld = await d3.json('worldMap.topojson');
-  gallupPoll = await d3.csv('gallupSum.csv');
+  let data = await Promise.all([d3.json('worldMap.topojson'),d3.csv('gallupSum.csv')]); 
+  topoWorld = topology = topojson.presimplify(data[0]);
+  topoWorld = topojson.simplify(topoWorld,0.3)
+  gallupPoll = data[1];
 
   colScale = d3.scaleSequential(d3.interpolatePuOr)
     	.domain([75, -75]);
@@ -41,6 +43,15 @@ async function readAndDraw(){
 }
 
 function draw(selection, data, params){
+
+  selection.append('g')
+    .attr('class', 'background')
+  .append('rect')
+    .attr('width', selection.node().width.baseVal.value)
+    .attr('height', selection.node().height.baseVal.value)
+    .attr('fill', 'none')
+    .attr('stroke', 'none');
+
   selection.append('g')
     .attr('class', 'Map')
     .selectAll('path.country')
@@ -51,7 +62,9 @@ function draw(selection, data, params){
     .attr('d', path)
     .call(setFill, color_threshold, params.year, params.groupType, params.varType)
     .style('stroke', '#212121')
-    .style('stroke-width', '0.5px');
+    //.style('opacity', 0.9)
+    .style('stroke-width', '1.5px')
+    .style('pointer-events', 'visible');
 
   let legendGroup = selection.append('g')
           .attr('transform', 'translate(20, 600)')
@@ -80,6 +93,42 @@ function draw(selection, data, params){
             })
             .style('text-anchor', ' middle')
             .style('fill', d => [-75, 75, 0].includes(d) ? 'black': 'none');
+
+  addEventListeners(selection);
+}
+
+function addEventListeners(selection){
+  selection
+    .selectAll('.country')
+    .on('mouseover', function(d){
+      console.log(d);
+      d3.select(this)
+          .raise()
+        .transition()
+          .style('stroke', '#fff');
+
+      /*let node = this;
+
+      selection
+        .selectAll('.country')
+        .filter(function(){
+          return this !== node;
+        })
+        .transition()
+          .style('opacity', 0.60);
+        //.style('stroke-width', '2px')
+        //.style('stroke', '#fff');*/
+    })
+    .on('mouseout', function(d){
+      console.log(d);
+      d3.select(this)
+        .transition()
+          .style('stroke', '#212121');
+      /*selection
+        .selectAll('.country')
+        .transition()
+        .style('opacity', '0.9');*/
+    })
 }
 
 function drawUpdate(selection, params){
