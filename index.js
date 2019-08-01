@@ -183,11 +183,11 @@ function setFill(selection, colScaleVar, year, groupType, varType){
         return colScaleVar(+filtData[0][varType]);
       }
       else {
-        return 'none';
+        return 'rgba(255,255,255,0)';
       }
     }
     else {
-      return 'none';
+      return 'rgba(255,255,255,0)';
     }
   })
 }
@@ -208,7 +208,7 @@ function joinSumWithMap(pathData, GallupData){
 
 }
 
-d3.selectAll('.selector').on('input', function(d, i){
+d3.selectAll('.selectors').on('input', function(d, i){
   let year = d3.select('.year.selector').node().value;
   let question = d3.select('.question.selector').node().value;
 
