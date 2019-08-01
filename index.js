@@ -2,12 +2,14 @@ let topoWorld, gallupPoll, projection, path, colScale;
 
 let params = {};
 params.year = 2016;
-params.groupType = 'Overall'
-params.varType = 'OptimismScore'
+params.groupType = 'Overall';
+params.varType = 'OptimismScore';
 
 async function readAndDraw(){
-  topoWorld = await d3.json('worldMap.topojson');
-  gallupPoll = await d3.csv('gallupSum.csv');
+  let data = await Promise.all([d3.json('worldMap.topojson'),d3.csv('gallupSum.csv')]); 
+  topoWorld = topology = topojson.presimplify(data[0]);
+  topoWorld = topojson.simplify(topoWorld,0.3)
+  gallupPoll = data[1];
 
   colScale = d3.scaleSequential(d3.interpolatePuOr)
     	.domain([75, -75]);
@@ -41,6 +43,15 @@ async function readAndDraw(){
 }
 
 function draw(selection, data, params){
+
+  selection.append('g')
+    .attr('class', 'background')
+  .append('rect')
+    .attr('width', selection.node().width.baseVal.value)
+    .attr('height', selection.node().height.baseVal.value)
+    .attr('fill', 'none')
+    .attr('stroke', 'none');
+
   selection.append('g')
     .attr('class', 'Map')
     .selectAll('path.country')
@@ -51,7 +62,9 @@ function draw(selection, data, params){
     .attr('d', path)
     .call(setFill, color_threshold, params.year, params.groupType, params.varType)
     .style('stroke', '#212121')
-    .style('stroke-width', '0.5px');
+    .style('opacity', 0.7)
+    .style('stroke-width', '1px')
+    .style('pointer-events', 'visible');
 
   let legendGroup = selection.append('g')
           .attr('transform', 'translate(20, 600)')
@@ -70,6 +83,7 @@ function draw(selection, data, params){
               return `translate(${i*25}, 0)`
             })
             .style('fill', d => color_threshold(d))
+            .style('opacity', 0.7);
             // .style('stroke', 'black')
             // .style('stroke-width', '0.5px');
 
@@ -80,6 +94,77 @@ function draw(selection, data, params){
             })
             .style('text-anchor', ' middle')
             .style('fill', d => [-75, 75, 0].includes(d) ? 'black': 'none');
+
+  addEventListeners(selection);
+}
+
+function addEventListeners(selection){
+
+  let tooltip = Tooltip({
+    idPrefix : 'w-tooltip',
+    dataId : 'index',
+    templateSelector : '#w-tooltip',
+    selectorDataMap : {
+      '.s-p__tooltip-header h1' : function(d){
+        return d.properties.ADMIN;
+      },
+      '.s-p__tooltip-header img' : function(d){
+        return `./flags/${d.properties.ADMIN.toLowerCase().replace(/ /g,'-')}.svg`;
+      },
+      '.s-p__tooltip-body p' : function(d) {
+        return document.getElementById('param').selectedOptions[0].innerText + ' : very high';
+      }
+    }
+  });
+  selection
+    .selectAll('.country')
+    .on('mouseover', function(d){
+      console.log(d);
+      d3.select(this)
+          .raise()
+        .transition()
+          .style('opacity', '1');
+
+      let node = this;
+
+      selection
+        .selectAll('.country')
+        .filter(function(){
+          return this !== node;
+        })
+        .transition()
+          .style('opacity', 0.4);
+        //.style('stroke-width', '2px')
+        //.style('stroke', '#fff');*/
+
+        selection
+          .selectAll('.legendContainer rect')
+          .transition()
+            .style('opacity', 1);
+    })
+    .on('mouseout', function(d){
+      console.log(d);
+      /*d3.select(this)
+        .transition()
+          .style('stroke', '#212121');*/
+      selection
+        .selectAll('.country')
+        .transition()
+        .style('opacity', '0.7');
+
+
+
+      selection
+        .selectAll('.legendContainer rect')
+        .transition()
+          .style('opacity', 0.7);
+
+      tooltip.removeTooltip(d);
+
+    })
+    .on('mousemove', function(d){
+      tooltip.createTooltip(d, d3.event);
+    });
 }
 
 function drawUpdate(selection, params){

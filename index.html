@@ -11,6 +11,10 @@
   <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
   <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
+  
+  <script src="https://unpkg.com/topojson-client@3"></script>
+  <script src="https://unpkg.com/topojson-simplify@3"></script>
+
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -67,7 +71,21 @@
       <p>Designed and Developed by <a href="https://plotree.studio/" style="text-decoration: none; color: #FFEB3B;">Plotree Info Design</a></p><img src="./resources/logoAlone.svg" class="foot_plotree"></img>
     </div>
   </div>
-  <script src="index.js"></script>
+
+  <template id="w-tooltip">
+    <div class="s-p__tooltip">
+      <div class="s-p__tooltip-header">
+        <h1></h1>
+        <img src=""/>
+      </div>
+      <div class="s-p__tooltip-body">
+        <p></p>
+      </div>
+    </div>
+  </template>
+  <script src="tooltip.js"></script>
+
+<script src="index.js"></script>
 
   <script>
     $('#select_year').selectize({
