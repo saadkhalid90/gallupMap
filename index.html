@@ -62,7 +62,11 @@
     </div>
   </div>
 
+
   <div class="svg_container">
+    <div class="QuestionText_container">
+      <p class="QuestionText">How do you feel about the coming year? Do you think it would be better , worse ?</p>
+    </div>
     <svg class ="GallupPollInd" width = 1200 height = 700 ></svg>
   </div>
 
@@ -112,6 +116,7 @@
         params.varType = question;
 
         drawUpdate(d3.selectAll('path'), params);
+
       }
     });
     $('#select_filter').selectize({

@@ -5,6 +5,20 @@ params.year = 2016;
 params.groupType = 'Overall';
 params.varType = 'OptimismScore';
 
+let questions = {
+  "OptimismScore": "How do you feel about the coming year? Do you think it would be better , worse ?",
+  "EconScore": "How do you feel about the coming year in terms of Economy ? Do you think it would be better , worse ?",
+  "HappinessScore": "In General Do you feel very Happy, Happy , Sad or Very Sad about your life?"
+}
+
+let indDesc = {
+  "OptimismScore" : "Percentage who responded 'Better' - Percentage who responded 'Worse'",
+  "EconScore" : "Percentage who responded 'Economic Prosperity' - Percentage who responded 'Economic Difficulty'",
+  "HappinessScore" : "Percentage who responded 'Happy' - Percentage who responded 'Unhappy'"
+}
+
+
+
 async function readAndDraw(){
   let data = await Promise.all([d3.json('worldMap.topojson'),d3.csv('gallupSum.csv')]);
   topoWorld = topology = topojson.presimplify(data[0]);
@@ -70,13 +84,13 @@ function draw(selection, data, params){
           .attr('transform', 'translate(20, 600)')
           .attr('class', 'legendContainer');
 
-  let legendComp = legendGroup.selectAll('g.legendComponent')
+  let legendComp = legendGroup.selectAll('rect.legendComponent')
             .data(d3.range(-75, 75+1, 75/5))
             .enter()
-            .append('g')
-            .attr('class', 'legendComponent')
+
 
   legendComp.append('rect')
+            .attr('class', 'legendComponent')
             .attr('width', 25)
             .attr('height', 10)
             .attr('transform', (d, i) => {
@@ -95,6 +109,18 @@ function draw(selection, data, params){
             .style('text-anchor', ' middle')
             .style('fill', d => [-75, 75, 0].includes(d) ? 'black': 'none');
 
+  legendGroup.append('text')
+            .attr('class', 'indDesc')
+            .text(d => {
+              let value = document.getElementById('param').selectedOptions[0].value;
+              return indDesc[value];
+            })
+            .attr('transform', (d, i) => {
+              return `translate(0, +35)`
+            })
+            .style('text-anchor', 'start')
+            .style('fill', 'black');
+
   addEventListeners(selection);
 }
 
@@ -112,16 +138,30 @@ function addEventListeners(selection){
         return `./flags/${d.properties.ADMIN.toLowerCase().replace(/ /g,'-')}.svg`;
       },
       '.s-p__tooltip-body p' : function(d) {
-        return document.getElementById('param').selectedOptions[0].innerText + ' : very high';
+
+        let selectInd = document.getElementById('param').selectedOptions[0].value;
+        let selectYear = document.getElementById('select_year').selectedOptions[0].value;
+        let filtData = d.Gallup.filter(d => d.Year == selectYear & d.groupType == "Overall");
+
+        let value = round2Dec(filtData[0][selectInd], 1);
+
+        return document.getElementById('param').selectedOptions[0].innerText + ' : ' + value;
       }
     }
   });
   selection
     .selectAll('.country')
+    .filter(d => d.Gallup)
+    .filter(d => {
+      let selectInd = document.getElementById('param').selectedOptions[0].value;
+      let selectYear = document.getElementById('select_year').selectedOptions[0].value;
+      let filtData = d.Gallup.filter(entry => entry.Year == selectYear & entry.groupType == "Overall")
+      return filtData.length != 0;
+    })
     .on('mouseover', function(d){
       d3.select(this)
           .raise()
-        .transition()
+        .transition('mouseOTrans')
           .style('fill-opacity', '1');
 
       let node = this;
@@ -131,14 +171,14 @@ function addEventListeners(selection){
         .filter(function(){
           return this !== node;
         })
-        .transition()
+        .transition('mouseOTrans')
           .style('opacity', 0.4);
         //.style('stroke-width', '2px')
         //.style('stroke', '#fff');*/
 
         selection
           .selectAll('.legendContainer rect')
-          .transition()
+          .transition('mouseOTrans')
             .style('opacity', 1);
     })
     .on('mouseout', function(d){
@@ -147,14 +187,14 @@ function addEventListeners(selection){
           .style('stroke', '#212121');*/
       selection
         .selectAll('.country')
-        .transition()
+        .transition('mouseOTrans')
         .style('opacity', '0.7');
 
 
 
       selection
         .selectAll('.legendContainer rect')
-        .transition()
+        .transition('mouseOTrans')
           .style('opacity', 0.7);
 
       tooltip.removeTooltip(d);
@@ -167,9 +207,12 @@ function addEventListeners(selection){
 
 function drawUpdate(selection, params){
   //selection.style('fill', 'none')
-  selection.transition()
+  selection.transition('updateTrans')
     .duration(1000)
     .call(setFill, color_threshold, params.year, params.groupType, params.varType);
+
+  d3.selectAll('text.indDesc').text(indDesc[params.varType]);
+  d3.select('p.QuestionText').html(questions[params.varType]);
 }
 
 function setFill(selection, colScaleVar, year, groupType, varType){
@@ -214,6 +257,12 @@ d3.selectAll('.selectors').on('input', function(d, i){
   params.year = year;
   params.groupType = 'Overall';
   params.varType = question;
-
-  drawUpdate(d3.selectAll('path'), params);
+  console.log(questions, question);
+  //drawUpdate(d3.selectAll('path'), params);
+  console.log(questions, question);
+  d3.select('text.indDesc').text(questions[question]);
 })
+
+function round2Dec(num, digits){
+  return Math.round(num * (10*digits))/(10*digits);
+}

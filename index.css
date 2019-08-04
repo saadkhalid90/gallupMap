@@ -52,11 +52,17 @@ body {
 }
 
 .svg_container {
-  background-image: radial-gradient(circle, #ffffff, #fbfbfb, #f6f6f6, #f2f2f2, #eeeeee);
+  background: #BDBDBD;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 40px 80px;
+}
+
+.QuestionText_container {
+  width: 100%;
+  font-size: 16px;
 }
 
 .foot_plotree {
