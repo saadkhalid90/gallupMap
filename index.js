@@ -73,6 +73,7 @@ function draw(selection, data, params){
     .enter()
     .append('path')
     .attr('class', 'country')
+    .attr('id', d => d.properties.ADM0_A3)
     .attr('d', path)
     .call(setFill, color_threshold, params.year, params.groupType, params.varType)
     .style('stroke', '#212121')
@@ -152,16 +153,16 @@ function addEventListeners(selection){
   let selectInd = document.getElementById('param').selectedOptions[0].value;
   let selectYear = document.getElementById('select_year').selectedOptions[0].value;
 
-  console.log(selectYear + selectInd);
-
-  console.log(selection.selectAll('.country').data());
-
-  console.log(selection.selectAll('.country').filter(d => d.Gallup).data());
+  // console.log(selectYear + selectInd);
+  //
+  // console.log(selection.selectAll('.country').data());
+  //
+  // console.log(selection.selectAll('.country').filter(d => d.Gallup).data());
 
   selection.selectAll('.country')
     .filter(d => d.Gallup)
     .filter(d => {
-      console.log(selectInd + selectYear);
+      //console.log(selectInd + selectYear);
       let filtData = d.Gallup.filter(entry => entry.Year == selectYear & entry.groupType == "Overall")
       return filtData.length != 0;
     })
@@ -285,9 +286,9 @@ d3.selectAll('.selectors').on('input', function(d, i){
   params.year = year;
   params.groupType = 'Overall';
   params.varType = question;
-  console.log(questions, question);
+  //console.log(questions, question);
   //drawUpdate(d3.selectAll('path'), params);
-  console.log(questions, question);
+  //console.log(questions, question);
   d3.select('text.indDesc').text(questions[question]);
 })
 
