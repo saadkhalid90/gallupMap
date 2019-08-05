@@ -222,7 +222,6 @@ function addEventListeners(selection){
 }
 
 function removeEventListener(selection){
-  console.log(selection);
   let paths = selection.selectAll('path.country');
   paths.on('mouseover', null);
   paths.on('mouseout', null);
