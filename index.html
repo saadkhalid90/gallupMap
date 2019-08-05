@@ -102,7 +102,9 @@
         params.groupType = 'Overall';
         params.varType = question;
 
-        drawUpdate(d3.selectAll('path'), params);
+        let selection = d3.select('svg.GallupPollInd');
+
+        drawUpdate(selection, params);
       }
     });
     $('#param').selectize({
@@ -115,7 +117,9 @@
         params.groupType = 'Overall';
         params.varType = question;
 
-        drawUpdate(d3.selectAll('path'), params);
+        let selection = d3.select('svg.GallupPollInd');
+
+        drawUpdate(selection, params);
 
       }
     });

@@ -125,7 +125,6 @@ function draw(selection, data, params){
 }
 
 function addEventListeners(selection){
-
   let tooltip = Tooltip({
     idPrefix : 'w-tooltip',
     dataId : 'index',
@@ -149,8 +148,25 @@ function addEventListeners(selection){
       }
     }
   });
-  selection
-    .selectAll('.country')
+
+  let selectInd = document.getElementById('param').selectedOptions[0].value;
+  let selectYear = document.getElementById('select_year').selectedOptions[0].value;
+
+  console.log(selectYear + selectInd);
+
+  console.log(selection.selectAll('.country').data());
+
+  console.log(selection.selectAll('.country').filter(d => d.Gallup).data());
+
+  selection.selectAll('.country')
+    .filter(d => d.Gallup)
+    .filter(d => {
+      console.log(selectInd + selectYear);
+      let filtData = d.Gallup.filter(entry => entry.Year == selectYear & entry.groupType == "Overall")
+      return filtData.length != 0;
+    })
+
+  selection.selectAll('.country')
     .filter(d => d.Gallup)
     .filter(d => {
       let selectInd = document.getElementById('param').selectedOptions[0].value;
@@ -205,11 +221,24 @@ function addEventListeners(selection){
     });
 }
 
+function removeEventListener(selection){
+  console.log(selection);
+  let paths = selection.selectAll('path.country');
+  paths.on('mouseover', null);
+  paths.on('mouseout', null);
+  paths.on('mousemove', null);
+}
+
 function drawUpdate(selection, params){
   //selection.style('fill', 'none')
-  selection.transition('updateTrans')
+  selection.selectAll('path.country')
+    .transition('updateTrans')
     .duration(1000)
     .call(setFill, color_threshold, params.year, params.groupType, params.varType);
+
+  removeEventListener(selection);
+
+  addEventListeners(selection);
 
   d3.selectAll('text.indDesc').text(indDesc[params.varType]);
   d3.select('p.QuestionText').html(questions[params.varType]);
