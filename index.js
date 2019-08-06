@@ -73,7 +73,7 @@ function draw(selection, data, params){
     .enter()
     .append('path')
     .attr('class', 'country')
-    .attr('id', d => d.properties.ADM0_A3)
+    .attr('id', d => d.properties.ADM0_)
     .attr('d', path)
     .call(setFill, color_threshold, params.year, params.groupType, params.varType)
     .style('stroke', '#212121')
@@ -141,7 +141,9 @@ function addEventListeners(selection){
 
         let selectInd = document.getElementById('param').selectedOptions[0].value;
         let selectYear = document.getElementById('select_year').selectedOptions[0].value;
-        let filtData = d.Gallup.filter(d => d.Year == selectYear & d.groupType == "Overall");
+        let selectFilt = document.getElementById('select_filter').selectedOptions[0].value;
+
+        let filtData = d.Gallup.filter(d => d.Year == selectYear & d.group == selectFilt);
 
         let value = round2Dec(filtData[0][selectInd], 1);
 
@@ -152,6 +154,7 @@ function addEventListeners(selection){
 
   let selectInd = document.getElementById('param').selectedOptions[0].value;
   let selectYear = document.getElementById('select_year').selectedOptions[0].value;
+  let selectFilt = document.getElementById('select_filter').selectedOptions[0].value;
 
   // console.log(selectYear + selectInd);
   //
@@ -163,7 +166,7 @@ function addEventListeners(selection){
     .filter(d => d.Gallup)
     .filter(d => {
       //console.log(selectInd + selectYear);
-      let filtData = d.Gallup.filter(entry => entry.Year == selectYear & entry.groupType == "Overall")
+      let filtData = d.Gallup.filter(entry => entry.Year == selectYear & entry.group == selectFilt)
       return filtData.length != 0;
     })
 
@@ -172,7 +175,8 @@ function addEventListeners(selection){
     .filter(d => {
       let selectInd = document.getElementById('param').selectedOptions[0].value;
       let selectYear = document.getElementById('select_year').selectedOptions[0].value;
-      let filtData = d.Gallup.filter(entry => entry.Year == selectYear & entry.groupType == "Overall")
+      let selectFilt = document.getElementById('select_filter').selectedOptions[0].value;
+      let filtData = d.Gallup.filter(entry => entry.Year == selectYear & entry.group == selectFilt)
       return filtData.length != 0;
     })
     .on('mouseover', function(d){
@@ -247,7 +251,7 @@ function drawUpdate(selection, params){
 function setFill(selection, colScaleVar, year, groupType, varType){
   selection.style('fill', d => {
     if (d.Gallup){
-      let filtData = d.Gallup.filter(d => d.Year == year & d.groupType == groupType);
+      let filtData = d.Gallup.filter(d => d.Year == year & d.group == groupType);
       if (filtData.length > 0){
         //return colScale(+filtData[0][varType]);
         return colScaleVar(+filtData[0][varType]);
@@ -278,19 +282,19 @@ function joinSumWithMap(pathData, GallupData){
 
 }
 
-d3.selectAll('.selectors').on('input', function(d, i){
-  let year = d3.select('.year.selector').node().value;
-  let question = d3.select('.question.selector').node().value;
-
-  let params = {};
-  params.year = year;
-  params.groupType = 'Overall';
-  params.varType = question;
-  //console.log(questions, question);
-  //drawUpdate(d3.selectAll('path'), params);
-  //console.log(questions, question);
-  d3.select('text.indDesc').text(questions[question]);
-})
+// d3.selectAll('.selectors').on('input', function(d, i){
+//   let year = d3.select('.year.selector').node().value;
+//   let question = d3.select('.question.selector').node().value;
+//
+//   let params = {};
+//   params.year = year;
+//   params.groupType = 'Overall';
+//   params.varType = question;
+//   //console.log(questions, question);
+//   //drawUpdate(d3.selectAll('path'), params);
+//   //console.log(questions, question);
+//   d3.select('text.indDesc').text(questions[question]);
+// })
 
 function round2Dec(num, digits){
   return Math.round(num * (10*digits))/(10*digits);

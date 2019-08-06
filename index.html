@@ -49,13 +49,27 @@
       <div class="selector">
         <span class="selector_label">Filter</span>
         <select id="select_filter" class = "filter">
-          <optgroup label="Sample Category">
-            <option value="volvo">Sample Filter 1</option>
-            <option value="saab">Sample Filter 2</option>
+          <option value="Overall">Overall (No filter)</option>
+          <optgroup label="Age Group">
+            <option value="Under 34">Under 34</option>
+            <option value="35 - 54">35-54</option>
+            <option value="55+">55+</option>
           </optgroup>
-          <optgroup label="Sample Category 2">
-            <option value="mercedes">Sample Filter 3</option>
-            <option value="audi">Sample Filter 4</option>
+          <optgroup label="Education">
+            <option value="No education/ only basic education">No or basic education</option>
+            <option value="Secondary school">Secondary School</option>
+            <option value="High level education (e.g. university)">Higher Education</option>
+          </optgroup>
+          <optgroup label="Gender">
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+          </optgroup>
+          <optgroup label="Wealth Quintile">
+            <option value="Low  (Bottom quintile/20%)">Low</option>
+            <option value="Medium low (Second quintile/20%)">Medium Low</option>
+            <option value="Medium (Third quintile/20%)">Medium</option>
+            <option value="Medium high (Fourth quintile/20%)">Medium High</option>
+            <option value="High (Top quintile/20%)">High</option>
           </optgroup>
         </select>
       </div>
@@ -96,10 +110,11 @@
       onChange: function(value) {
         let year = value;
         let question = $('#param').val();
+        let filter = $('#select_filter').val();
 
         let params = {};
         params.year = year;
-        params.groupType = 'Overall';
+        params.groupType = filter;
         params.varType = question;
 
         let selection = d3.select('svg.GallupPollInd');
@@ -111,10 +126,11 @@
       onChange: function(value) {
         let year = $('#select_year').val();
         let question = value;
+        let filter = $('#select_filter').val();
 
         let params = {};
         params.year = year;
-        params.groupType = 'Overall';
+        params.groupType = filter;
         params.varType = question;
 
         let selection = d3.select('svg.GallupPollInd');
@@ -124,7 +140,22 @@
       }
     });
     $('#select_filter').selectize({
-      sortField: 'text'
+      //sortField: 'text'
+      onChange: function(value) {
+        let year = $('#select_year').val();
+        let filter = value;
+        let question = $('#param').val();
+
+        let params = {};
+        params.year = year;
+        params.groupType = filter;
+        params.varType = question;
+
+        let selection = d3.select('svg.GallupPollInd');
+
+        drawUpdate(selection, params);
+
+      }
     });
   </script>
 </body>
